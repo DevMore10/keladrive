@@ -1,23 +1,22 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Doc } from "../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FileTextIcon, GanttChartIcon, ImageIcon, MoreVertical, TrashIcon } from "lucide-react";
+import {
+  FileTextIcon,
+  GanttChartIcon,
+  ImageIcon,
+  MoreVertical,
+  StarIcon,
+  TrashIcon,
+} from "lucide-react";
 
 import {
   AlertDialog,
@@ -31,17 +30,15 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { ReactNode, useState } from "react";
-import { deleteFile } from "../../convex/files";
 import { useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { query } from "../../convex/_generated/server";
-import { v } from "convex/values";
 
-function FileCardActions({ file }: { file: Doc<"files"> & { url: string | null } }) {
+function FileCardActions({ file }: { file: Doc<"files"> }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const deleteFile = useMutation(api.files.deleteFile);
+  const toggleFavourite = useMutation(api.files.toggleFavorite);
 
   return (
     <>
@@ -57,6 +54,17 @@ function FileCardActions({ file }: { file: Doc<"files"> & { url: string | null }
             className="flex gap-1 items-center cursor-pointer text-red-700">
             <TrashIcon />
             Delete
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              toggleFavourite({
+                fileId: file._id,
+              });
+            }}
+            className="flex gap-1 items-center cursor-pointer text-blue-800">
+            <StarIcon />
+            Favourites
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -92,7 +100,7 @@ function FileCardActions({ file }: { file: Doc<"files"> & { url: string | null }
   );
 }
 
-export function FileCard({ file }: { file: Doc<"files"> & { url: string | null } }) {
+export function FileCard({ file }: { file: Doc<"files"> & { url?: string | null } }) {
   const typeIcons = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,

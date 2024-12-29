@@ -5,7 +5,7 @@ import { SignInButton, useOrganization, useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useMutation, useQueries, useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import {
   Dialog,
   DialogContent,
@@ -31,7 +31,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc } from "../../../convex/_generated/dataModel";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
