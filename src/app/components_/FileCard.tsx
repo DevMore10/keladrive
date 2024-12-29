@@ -35,6 +35,7 @@ import { api } from "../../../convex/_generated/api";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
 import StarFullIcon from "@/Icons/StarFullIcon";
+import { Protect } from "@clerk/nextjs";
 
 function FileCardActions({ file, isFavourited }: { file: Doc<"files">; isFavourited: boolean }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -48,15 +49,6 @@ function FileCardActions({ file, isFavourited }: { file: Doc<"files">; isFavouri
           <MoreVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              setIsConfirmOpen(true);
-            }}
-            className="flex gap-1 items-center cursor-pointer text-red-700">
-            <TrashIcon />
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               toggleFavourite({
@@ -74,6 +66,20 @@ function FileCardActions({ file, isFavourited }: { file: Doc<"files">; isFavouri
               </div>
             )}
           </DropdownMenuItem>
+
+          <Protect
+            role="org:admin"
+            fallback={<></>}>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setIsConfirmOpen(true);
+              }}
+              className="flex gap-1 items-center cursor-pointer text-red-700">
+              <TrashIcon />
+              Delete
+            </DropdownMenuItem>
+          </Protect>
         </DropdownMenuContent>
       </DropdownMenu>
 

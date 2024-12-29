@@ -97,7 +97,6 @@ export default function FilesPage({
               />
               <UploadButton />
             </div>
-
             <div className="grid grid-cols-3 gap-5">
               {files?.map((file) => {
                 return (
