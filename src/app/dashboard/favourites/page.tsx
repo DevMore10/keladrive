@@ -5,7 +5,7 @@ export default function FavouritePage() {
     <div>
       <FileBrowser
         title={"Favourites"}
-        favourites
+        favouritesOnly
       />
     </div>
   );

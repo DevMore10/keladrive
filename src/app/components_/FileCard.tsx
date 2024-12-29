@@ -34,8 +34,9 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
+import StarFullIcon from "@/Icons/StarFullIcon";
 
-function FileCardActions({ file }: { file: Doc<"files"> }) {
+function FileCardActions({ file, isFavourited }: { file: Doc<"files">; isFavourited: boolean }) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const deleteFile = useMutation(api.files.deleteFile);
   const toggleFavourite = useMutation(api.files.toggleFavorite);
@@ -63,8 +64,15 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
               });
             }}
             className="flex gap-1 items-center cursor-pointer text-blue-800">
-            <StarIcon />
-            Favourites
+            {isFavourited ? (
+              <div className="flex gap-2">
+                <StarFullIcon /> Unfavourite
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <StarIcon /> Favourite
+              </div>
+            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -100,12 +108,20 @@ function FileCardActions({ file }: { file: Doc<"files"> }) {
   );
 }
 
-export function FileCard({ file }: { file: Doc<"files"> & { url?: string | null } }) {
+export function FileCard({
+  file,
+  favourites,
+}: {
+  file: Doc<"files"> & { url?: string | null };
+  favourites: Doc<"favourites">[];
+}) {
   const typeIcons = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,
     csv: <GanttChartIcon />,
   } as Record<Doc<"files">["type"], ReactNode>;
+
+  const isFavourited = favourites.some((favourite) => favourite.fileId === file._id);
 
   return (
     <Card>
@@ -117,7 +133,10 @@ export function FileCard({ file }: { file: Doc<"files"> & { url?: string | null 
         </CardTitle>
 
         <div className="absolute top-3 right-3">
-          <FileCardActions file={file} />
+          <FileCardActions
+            file={file}
+            isFavourited={isFavourited}
+          />
         </div>
         {/* <CardDescription>Card Description</CardDescription> */}
       </CardHeader>

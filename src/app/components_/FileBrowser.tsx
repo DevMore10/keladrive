@@ -29,7 +29,13 @@ function Placeholder() {
   );
 }
 
-export default function FilesPage({ title, favourites }: { title: string; favourites?: boolean }) {
+export default function FilesPage({
+  title,
+  favouritesOnly,
+}: {
+  title: string;
+  favouritesOnly?: boolean;
+}) {
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
@@ -39,7 +45,11 @@ export default function FilesPage({ title, favourites }: { title: string; favour
     orgId = organization.organization?.id ?? user.user?.id;
   }
 
-  const files = useQuery(api.files.getFiles, orgId ? { orgId, query, favourites } : "skip");
+  const favourites = useQuery(api.files.getAllFavorites, orgId ? { orgId } : "skip");
+  const files = useQuery(
+    api.files.getFiles,
+    orgId ? { orgId, query, favourites: favouritesOnly } : "skip"
+  );
   const isLoading = files === undefined;
 
   return (
@@ -94,6 +104,7 @@ export default function FilesPage({ title, favourites }: { title: string; favour
                   <FileCard
                     key={file._id}
                     file={file}
+                    favourites={favourites ?? []}
                   />
                 );
               })}
