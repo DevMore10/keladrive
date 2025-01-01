@@ -1,5 +1,5 @@
 import React from "react";
-import FileBrowser from "@/app/components_/FileBrowser";
+import FileBrowser from "@/app/dashboard/components_/FileBrowser";
 
 const page = () => {
   return (

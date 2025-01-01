@@ -1,4 +1,4 @@
-import FileBrowser from "@/app/components_/FileBrowser";
+import FileBrowser from "@/app/dashboard/components_/FileBrowser";
 
 export default function FavouritePage() {
   return (
